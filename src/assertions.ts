@@ -873,12 +873,15 @@ ${assertion.value}`,
       typeof output === 'string',
       'answer-relevance assertion type must evaluate a string output',
     );
-    invariant(prompt, 'answer-relevance assertion type must have a prompt');
-
+    invariant(test.vars, 'answer-relevance assertion type must have a vars object');
+    invariant(
+      typeof test.vars.query === 'string',
+      'answer relevance assertion type must have a question var as a string'
+    );
     // Assertion provider overrides test provider
     test.options = test.options || {};
     test.options.provider = assertion.provider || test.options.provider;
-    let input = test.vars?.query === 'string' ? test.vars.query : prompt;
+    let input = test.vars.query;
     return {
       assertion,
       ...(await matchesAnswerRelevance(input, output, assertion.threshold || 0, test.options)),
